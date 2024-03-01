@@ -13,6 +13,9 @@ const StudentLogin = require('./models/StudentLogin');
 const bcrypt = require('bcrypt')
 const Student = require('./models/Student')
 const Fee = require('./models/Fee')
+const puppeteer = require('puppeteer')
+const ejs = require('ejs')
+const fs = require('fs')
 
 initializePassport(
   passport,
@@ -136,7 +139,7 @@ app.post('/student/form', checkAuthenticated, async (req, res) => {
   try {
     const nullFields = [];
     for (const field of ['Name', 'Department', 'Semester', 'Address',
-      'PhoneNo', 'EmailId', 'CGPA', 'RoomNo', 'HostelId']) {
+      'PhoneNo', 'EmailId', 'DOB', 'BloodGrp', 'CGPA', 'RoomNo', 'HostelId']) {
       if (!req.body[field]) {
         nullFields.push(field);
       }
@@ -156,6 +159,8 @@ app.post('/student/form', checkAuthenticated, async (req, res) => {
       Address: req.body.Address,
       PhoneNo: req.body.PhoneNo,
       EmailId: req.body.EmailId,
+      DOB: req.body.DOB,
+      BloodGrp: req.body.BloodGrp,
       CGPA: req.body.CGPA,
       RoomNo: req.body.RoomNo,
       HostelId: req.body.HostelId,
@@ -188,12 +193,62 @@ app.post('/student/fee', checkAuthenticated, async (req, res) => {
   }
 })
 
+app.get('/student/get-messcard', checkAuthenticated, async (req, res) => {
+  try {
+    const htmlContent = await generateMessCard(req);
+    const browser = await puppeteer.launch();
+    const page = await browser.newPage();
+    await page.setContent(htmlContent);
+
+    const pdfBuffer = await page.pdf({
+      format: 'A4',
+      printBackground: true,
+      margin: {
+        top: '20px',
+        right: '20px',
+        bottom: '20px',
+        left: '20px',
+      },
+    });
+
+    await browser.close();
+
+    res.contentType('application/pdf');
+    res.send(pdfBuffer);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Error generating PDF');
+  }
+});
+
 function formatDate(date) {
   const year = date.getFullYear();
   let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Leading zero for single-digit months
   let day = date.getDate().toString().padStart(2, '0'); // Leading zero for single-digit days
 
   return `${year}-${month}-${day}`;
+}
+
+async function generateMessCard(req) {
+  try {
+    const templateString = await fs.promises.readFile('./views/card.ejs', 'utf-8');
+    const student = await Student.findOne({ where: {USN: req.session.passport.user} })
+    const data = {
+      name: student.Name, 
+      usn: student.USN, 
+      room_no: student.RoomNo, 
+      date_of_birth: student.DOB,
+      phone_no: student.PhoneNo,
+      email: student.EmailId,
+      blood_grp: student.BloodGrp,
+      perm_addr: student.Address
+    }
+    const htmlContent = ejs.render(templateString, data);
+    return htmlContent;
+  } catch (error) {
+    console.error('Error rendering template:', error);
+    throw error;
+  }
 }
 
 const port = 3000;

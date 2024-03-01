@@ -9,6 +9,7 @@
     "mysql2": "^3.7.1",
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
+    "puppeteer": "^22.3.0",
     "sequelize": "^6.37.1"
   },
   "name": "backend",

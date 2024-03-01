@@ -1,0 +1,351 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="preconnect" href="https://fonts.gstatic.com" />
+    <link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap"
+        rel="stylesheet" />
+    <title>Reports</title>
+    <style>
+        * {
+            font-family: "Montserrat", sans-serif;
+            color: #354052;
+        }
+
+        html,
+        body {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            background: url("https://decentro-public.s3.ap-south-1.amazonaws.com/invoice/img/background.png") no-repeat center center fixed;
+            background-size: cover;
+            font-size: 16px;
+            line-height: 16px;
+            position: relative;
+        }
+
+        button,
+        a {
+            outline: none;
+            cursor: pointer;
+        }
+
+        h1,
+        h2,
+        h3,
+        h4,
+        h5,
+        h6,
+        p,
+        label,
+        ul,
+        li {
+            margin: 0;
+            padding: 0;
+        }
+
+        .invoice {
+            max-width: 800px;
+            margin: 50px auto;
+            padding: 40px 50px;
+            border-radius: 30px;
+            background: #ffffff;
+            box-shadow: 0px 3px 40px rgba(0, 0, 0, 0.05);
+        }
+
+
+        .main-container {
+            padding: 30px;
+            width: 100%;
+            background: url(https://decentro-public.s3.ap-south-1.amazonaws.com/invoice/img/background.png) no-repeat center center fixed;
+            background-size: cover;
+            z-index: 100;
+            position: relative;
+            box-sizing: border-box;
+        }
+
+        .logo-row {
+            width: 100%;
+            display: flex;
+            -webkit-box-pack: space-between;
+            -webkit-box-align: center;
+            align-items: center;
+            justify-content: space-between;
+        }
+
+        .logo-row img {
+            width: 150px;
+        }
+
+        .logo-row label {
+            font-size: 1.375rem;
+            font-weight: 600;
+            color: #dfecf5;
+        }
+
+        .divider-holder {
+            height: 20px;
+            margin-top: 20px;
+            display: -webkit-box;
+            -webkit-box-pack: center;
+            -webkit-box-align: flex-end;
+            justify-content: center;
+            align-items: flex-end;
+            display: flex;
+        }
+
+        .divider {
+            border-bottom: 1px solid #d2d4d7;
+            width: 100%;
+        }
+
+        .partner-heading {
+            width: 100%;
+            height: 20px;
+            display: -webkit-box;
+            -webkit-box-pack: center;
+            -webkit-box-align: center;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 0px;
+        }
+
+        .footer-container {
+            margin-top: 20px;
+            text-align: center;
+            display: -webkit-box;
+            -webkit-box-pack: center;
+            -webkit-flex-flow: column;
+            display: flex;
+            flex-flow: column;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .footer-container>span {
+            font-size: 0.5rem;
+            font-weight: 400;
+            line-height: 1.125rem;
+            color: #354052;
+        }
+
+        .footer-container img {
+            width: 80px;
+            margin-top: 3px;
+        }
+
+        .footer-container .footer-text {
+            font-size: 0.75rem;
+            color: #354052;
+            width: 60%;
+            margin-bottom: 8px;
+        }
+
+        .wallet-details-information {
+            width: 90%;
+            display: -webkit-box;
+            -webkit-box-pack: center;
+            -webkit-box-direction: column;
+            -webkit-box-orient: vertical;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            gap: 10px;
+            border-radius: 20px;
+            padding: 16px;
+            background: #f3faff;
+        }
+
+        .first-row-container {
+            display: -webkit-box;
+            -webkit-box-pack: space-between;
+            -webkit-box-align: center;
+            display: flex;
+            margin-top: 20px;
+            height: 100%;
+            justify-content: space-between;
+            align-items: center;
+            width: 100%;
+            gap: 10px;
+        }
+
+        .customer-image-container {
+            width: 37%;
+            height: 90%;
+            display: -webkit-box;
+            -webkit-box-direction: column;
+            -webkit-box-orient: vertical;
+            display: flex;
+            flex-direction: column;
+            margin: 10px;
+            border-radius: 20px;
+            padding: 0px;
+        }
+
+        .customer-image-container>img {
+            width: 100%;
+            height: 100%;
+            border-radius: 20px;
+        }
+
+        .wallet-title {
+            padding-left: 7px;
+        }
+
+        .details-container {
+            display: -webkit-box;
+            -webkit-box-direction: column;
+            -webkit-box-orient: vertical;
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+            font-weight: 400;
+            padding: 7px;
+        }
+
+        .detail {
+            display: -webkit-box;
+            -webkit-box-wrap: wrap;
+            display: flex;
+            gap: 8px;
+            font-weight: 300;
+            height: auto;
+            flex-wrap: wrap;
+            overflow-wrap: normal;
+            word-break: break-word;
+            white-space: normal;
+            text-transform: uppercase;
+        }
+
+        .ckyc-document-image-container {
+            width: 97%;
+            display: -webkit-box;
+            -webkit-box-pack: space-evenly;
+            -webkit-box-direction: column;
+            -webkit-box-orient: vertical;
+            display: flex;
+            justify-content: space-evenly;
+            padding: 22px;
+            background: #f4faff;
+            border-radius: 20px;
+            margin-top: 20px;
+            flex-direction: column;
+        }
+
+        .ckyc-document-image-heading {
+            padding-bottom: 12px;
+        }
+
+        .ckyc-document-image-place-holder {
+            height: 83%;
+            width: 98%;
+            display: -webkit-box;
+            -webkit-box-pack: space-between;
+            -webkit-box-align: center;
+            display: flex;
+            justify-content: space-between;
+            gap: 20px;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        .ckyc-image {
+            width: 50%;
+            height: 100%;
+        }
+
+        button#button-pdf {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            width: -webkit-max-content;
+            width: max-content;
+            margin-top: 10px;
+            margin-left: 20px;
+            padding: 15px 30px;
+            font-size: 15px;
+            font-weight: 600;
+            line-height: 16px;
+            border-radius: 100px;
+            color: #fff;
+            border: none;
+            background: transparent linear-gradient(90deg, #3a36c6, #66ceac) 0 0;
+        }
+
+        .ckyc-image {
+            width: 50%;
+            height: 100%;
+        }
+
+        .ckyc-image img {
+            max-width: 250px;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="main-container" id="mainContainer">
+        <div class="invoice before-download" id="ckyc-full-pdf">
+            <div class="partner-heading">
+                <div class="span">
+                    <p>
+                        <strong class="font-heading-color-size">MESS CARD</strong>
+                    </p>
+                </div>
+            </div>
+
+            <div class="first-row-container">
+                <div class="wallet-details-information">
+                    <p class="wallet-title">
+                        <strong class="font-heading-color-size">HOLDER DETAILS:</strong>
+                    </p>
+                    <div class="details-container">
+                        <p class="detail">
+                            <strong class="font-sub-heading-color-size">USN:</strong>
+                            <span class="font-size-for-value"><%= usn %></span>
+                        </p>
+                        <p class="detail">
+                            <strong class="font-sub-heading-color-size">NAME:</strong><span
+                                class="font-size-for-value"><%= name %></span>
+                        </p>
+                        <p class="detail">
+                            <strong class="font-sub-heading-color-size">ROOM NO:</strong><span
+                                class="font-size-for-value"><%= room_no %></span>
+                        </p>
+                        <p class="detail">
+                            <strong class="font-sub-heading-color-size">DATE OF BIRTH:</strong><span
+                                class="font-size-for-value"><%= date_of_birth %></span>
+                        </p>
+                        <p class="detail">
+                            <strong class="font-sub-heading-color-size">PHONE NO:</strong><span
+                                class="font-size-for-value"><%= phone_no %></span>
+                        </p>
+                        <p class="detail">
+                            <strong class="font-sub-heading-color-size">EMAIL ID:</strong><span
+                                class="font-size-for-value"><%= email %></span>
+                        </p>
+                        <p class="detail">
+                            <strong class="font-sub-heading-color-size">BLOOD GRP</strong><span
+                                class="font-size-for-value"><%= blood_grp %></span>
+                        </p>
+                        <p class="detail">
+                            <strong class="font-sub-heading-color-size">PERMANENT ADDRESS:</strong><span
+                                class="font-size-for-value"><%= perm_addr %></span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="customer-image-container">
+                    <img src="https://decentro-icons.s3.ap-south-1.amazonaws.com/jspdf-blog-customerimage.webp"
+                        alt="Transcrop customer" width="100%" height="100%" />
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+
+</html>

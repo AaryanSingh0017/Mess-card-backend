@@ -24,6 +24,12 @@ const Student = sequelize.define('Student', {
   EmailId: {
     type: DataTypes.STRING(30),
   },
+  DOB: {
+    type: DataTypes.DATE
+  },
+  BloodGrp: {
+    type: DataTypes.STRING(2)
+  },
   CGPA: {
     type: DataTypes.REAL,
   },
