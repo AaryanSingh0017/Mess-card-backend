@@ -12,6 +12,7 @@ const session = require('express-session');
 const StudentLogin = require('./models/StudentLogin');
 const bcrypt = require('bcrypt')
 const Student = require('./models/Student')
+const Fee = require('./models/Fee')
 
 initializePassport(
   passport,
@@ -25,11 +26,26 @@ initializePassport(
     }
   }
 )
+const checkAPIKey = (req, res, next) => {
+  const apiKey = req.headers.authorization;
+  if (req.url !== '/' && (!apiKey || apiKey !== process.env.API_KEY)) {
+    return res.status(401).json({ message: 'Unauthorized' });
+  }
+  next();
+}
+const checkAuthenticated = (req, res, next) => {
+  if (req.isAuthenticated()) {
+    return next()
+  }
+  return res.status(401).json({ message: 'You must login first' })
+}
+app.set('view engine', 'ejs')
 app.use(bodyParser.json());
+app.use(checkAPIKey);
 app.use(session({
   secret: process.env.SESSION_SECRET,
   resave: false,
-  saveUninitialized: true,
+  saveUninitialized: false,
   cookie: { secure: false }
 }))
 app.use(passport.initialize())
@@ -41,7 +57,7 @@ sequelize.sync({ force: false }).then(() => {
 });
 
 app.get('/', (req, res) => {
-  res.status(200).send("Docs for my node app")
+  res.render('docs')
 })
 
 app.post('/student/register', async (req, res) => {
@@ -103,7 +119,7 @@ app.post('/student/login', async (req, res) => {
   }
 })
 
-app.post('/student/logout', (req, res) => {
+app.post('/student/logout', checkAuthenticated, (req, res) => {
   req.logout(err => {
     if (err) {
       return res.status(500).send({ message: 'Internal server error.' })
@@ -113,13 +129,13 @@ app.post('/student/logout', (req, res) => {
 })
 
 app.get('/student/is-logged-in', (req, res) => {
-  return res.status(200).json({result: req.isAuthenticated() })
+  return res.status(200).json({ result: req.isAuthenticated() })
 })
 
-app.post('/student/form', async (req, res) => {
+app.post('/student/form', checkAuthenticated, async (req, res) => {
   try {
     const nullFields = [];
-    for (const field of ['USN', 'Name', 'Department', 'Semester', 'Address',
+    for (const field of ['Name', 'Department', 'Semester', 'Address',
       'PhoneNo', 'EmailId', 'CGPA', 'RoomNo', 'HostelId']) {
       if (!req.body[field]) {
         nullFields.push(field);
@@ -133,7 +149,7 @@ app.post('/student/form', async (req, res) => {
     }
 
     const newStudent = await Student.create({
-      USN: req.body.USN,
+      USN: req.session.passport.user,
       Name: req.body.Name,
       Department: req.body.Department,
       Semester: req.body.Semester,
@@ -151,6 +167,34 @@ app.post('/student/form', async (req, res) => {
     res.status(500).send('Internal Server Error');
   }
 });
+
+app.post('/student/fee', checkAuthenticated, async (req, res) => {
+  try {
+    const { UTR, TID } = req.body;
+    if (!UTR || !TID) {
+      return res.status(400).send({ message: 'Missing required fields: UTR and TID.' });
+    }
+    const newFee = await Fee.create({
+      UTR: UTR,
+      TID: TID,
+      PaidDate: formatDate(new Date()),
+      Status: 'Pending',
+      USN: req.session.passport.user
+    })
+    res.status(201).json(newFee)
+  } catch (e) {
+    console.log(e)
+    res.status(500).json({ message: 'Error inserting Fee.' })
+  }
+})
+
+function formatDate(date) {
+  const year = date.getFullYear();
+  let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Leading zero for single-digit months
+  let day = date.getDate().toString().padStart(2, '0'); // Leading zero for single-digit days
+
+  return `${year}-${month}-${day}`;
+}
 
 const port = 3000;
 app.listen(port, () => console.log(`Server listening on port ${port}`))

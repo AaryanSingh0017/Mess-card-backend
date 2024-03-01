@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Node App Documentation</title>
+</head>
+<body>
+  <h1>Node App Documentation</h1>
+  <h2>API Endpoints</h2>
+  <p>All endpoints except GET / require the API key to be included in the authorization header.</p>
+
+  <h3>GET /</h3>
+  <p>Description: Returns this page</p>
+  <p>Authentication: Not required.</p>
+  <p>Status Code: 200 (OK)</p>
+
+  <h3>POST /student/register</h3>
+  <p>Description: Registers a new student user.</p>
+  <p>Request Body:</p>
+  <ul>
+    <li>USN: (string) The student's unique identifier.</li>
+    <li>password: (string) The student's password.</li>
+  </ul>
+  <p>Authentication: Not required.</p>
+  <p>Status Codes:</p>
+  <ul>
+    <li>201 (Created): User registered successfully.</li>
+    <li>400 (Bad Request): Missing required fields.</li>
+    <li>409 (Conflict): USN already exists.</li>
+    <li>500 (Internal Server Error): Internal server error.</li>
+  </ul>
+
+  <h3>POST /student/login</h3>
+  <p>Description: Logs in a student user.</p>
+  <p>Request Body:</p>
+  <ul>
+    <li>USN: (string) The student's unique identifier.</li>
+    <li>password: (string) The student's password.</li>
+  </ul>
+  <p>Authentication: Not required.</p>
+  <p>Status Codes:</p>
+  <ul>
+    <li>200 (OK): Login successful.</li>
+    <li>400 (Bad Request): Missing required fields.</li>
+    <li>401 (Unauthorized): Invalid USN or password.</li>
+    <li>500 (Internal Server Error): Internal server error.</li>
+  </ul>
+
+  <h3>POST /student/logout</h3>
+  <p>Description: Logs out the currently logged-in student user.</p>
+  <p>Authentication: Required.</p>
+  <p>Status Codes:</p>
+  <ul>
+    <li>200 (OK): User successfully logged out.</li>
+    <li>500 (Internal Server Error): Internal server error.</li>
+  </ul>
+
+  <h3>GET /student/is-logged-in</h3>
+  <p>Description: Checks if the user is currently logged in.</p>
+  <p>Authentication: Not required.</p>
+  <p>Response Body:</p>
+  <ul>
+    <li>result: (boolean) True if the user is logged in, false otherwise.</li>
+  </ul>
+  <p>Status Code: 200 (OK)</p>
+
+  <h3>POST /student/form</h3>
+  <p>Description: Submits a student information form.</p>
+  <p>Authentication: Required.</p>
+  <p>Request Body:</p>
+  <ul>
+    <li>Name: (string) Student's name.</li>
+    <li>Department: (string) Student's department.</li>
+    <li>Semester: (string) Student's semester.</li>
+    <li>Address: (string) Student's address.</li>
+    <li>PhoneNo: (string) Student's phone number.</li>
+    <li>EmailId: (string) Student's email address.</li>
+    <li>CGPA: (number) Student's CGPA.</li>
+    <li>RoomNo: (string) Student's room number (optional).</li>
+    <li>HostelId: (string) Student's hostel ID (optional).</li>
+  </ul>
+  <p>Status Codes:</p>
+  <ul>
+    <li>201 (Created): Student information submitted successfully.</li>
+    <li>400 (Bad Request): Missing required fields.</li>
+    <li>500 (Internal Server Error): Internal server error.</li>
+  </ul>
+
+  <h3>POST /student/fee</h3>
+  <p>Description: Submits a new fee record for the logged-in student.</p>
+  <p>Authentication: Required.</p>
+  <p>Request Body:</p>
+  <ul>
+    <li>UTR: (string) Unique Transaction Reference number for the fee payment.</li>
+    <li>TID: (string) Transaction ID from the payment gateway.</li>
+  </ul>
+  <p>Status Codes:</p>
+  <ul>
+    <li>201 (Created): Fee record submitted successfully.</li>
+    <li>400 (Bad Request): Missing required fields.</li>
+    <li>500 (Internal Server Error): Internal server error.</li>
+  </ul>
+
+</body>
+</html>
