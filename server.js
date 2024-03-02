@@ -16,6 +16,18 @@ const Fee = require('./models/Fee')
 const puppeteer = require('puppeteer')
 const ejs = require('ejs')
 const fs = require('fs')
+const Picture = require('./models/Picture')
+const multer = require('multer')
+const storage = multer.diskStorage({
+  destination: (req, file, callback) => {
+    callback(null, 'images')
+  },
+  filename: (req, file, callback) => {
+    //req.file = file
+    callback(null, `${req.session.passport.user}.jpg`)
+  }
+});
+const upload = multer({ storage })
 
 initializePassport(
   passport,
@@ -188,12 +200,35 @@ app.post('/student/fee', checkAuthenticated, async (req, res) => {
     })
     res.status(201).json(newFee)
   } catch (e) {
-    console.log(e)
     res.status(500).json({ message: 'Error inserting Fee.' })
   }
 })
 
-app.get('/student/get-messcard', checkAuthenticated, async (req, res) => {
+const checkStdFormFilled = async (req, res, next) => {
+  const student = await Student.findByPk(req.session.passport.user)
+  if (!student) {
+    return res.status(401).json({ message: 'Fill student detail form first.' })
+  }
+  next()
+}
+
+const checkFeeFormFilled = async (req, res, next) => {
+  const fee = await Fee.findByPk(req.session.passport.user)
+  if (!fee) {
+    return res.status(401).json({ message: 'Fill fee detail form first.' })
+  }
+  next()
+}
+
+const checkImageUploaded = async (req, res, next) => {
+  const image = await Picture.findByPk(req.session.passport.user)
+  if (!image) {
+    return res.status(401).json({ message: 'Upload profile picture to obtain mess card.' })
+  }
+  next()
+}
+
+app.get('/student/get-messcard', checkAuthenticated, checkStdFormFilled, checkFeeFormFilled, checkImageUploaded, async (req, res) => {
   try {
     const htmlContent = await generateMessCard(req);
     const browser = await puppeteer.launch();
@@ -221,6 +256,24 @@ app.get('/student/get-messcard', checkAuthenticated, async (req, res) => {
   }
 });
 
+app.post('/student/upload-image', checkAuthenticated, upload.single('profilePicture'), async (req, res) => {
+  try {
+    if (!req.file) {
+      return res.status(400).json({ message: 'Missing field: profilePicture' })
+    }
+    const imageBuffer = fs.readFileSync(req.file.path)
+    const dataUrl = getImageDataUrl(req, imageBuffer)
+    const img = await Picture.create({
+      USN: req.session.passport.user,
+      profilePicture: dataUrl
+    })
+    res.status(201).json({ message: 'Image uploaded successfully', data: img })
+  } catch (e) {
+    console.log(e)
+    res.status(500).json({ message: 'Error uploading image' })
+  }
+});
+
 function formatDate(date) {
   const year = date.getFullYear();
   let month = (date.getMonth() + 1).toString().padStart(2, '0'); // Leading zero for single-digit months
@@ -229,19 +282,27 @@ function formatDate(date) {
   return `${year}-${month}-${day}`;
 }
 
+function getImageDataUrl(req, imageBuffer) {
+  const base64Data = Buffer.from(imageBuffer).toString('base64');
+  const mimeType = req.file.mimetype;
+  return `data:${mimeType};base64,${base64Data}`;
+}
+
 async function generateMessCard(req) {
   try {
     const templateString = await fs.promises.readFile('./views/card.ejs', 'utf-8');
-    const student = await Student.findOne({ where: {USN: req.session.passport.user} })
+    const student = await Student.findOne({ where: { USN: req.session.passport.user } })
+    const img = await Picture.findOne({ where: { USN: req.session.passport.user } })
     const data = {
-      name: student.Name, 
-      usn: student.USN, 
-      room_no: student.RoomNo, 
-      date_of_birth: student.DOB,
+      name: student.Name,
+      usn: student.USN,
+      room_no: student.RoomNo,
+      date_of_birth: formatDate(student.DOB),
       phone_no: student.PhoneNo,
       email: student.EmailId,
       blood_grp: student.BloodGrp,
-      perm_addr: student.Address
+      perm_addr: student.Address,
+      img_src: img.profilePicture
     }
     const htmlContent = ejs.render(templateString, data);
     return htmlContent;

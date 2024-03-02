@@ -107,19 +107,6 @@
       </ul>
     </li>
     <li>
-      <b>GET /student/get-messcard</b>
-      <ul>
-        <li>Description: Download the student's mess card as a PDF.</li>
-        <li>Requires Authentication: Yes</li>
-        <li>Response:</li>
-          <ul>
-            <li>Content-Type: application/pdf (on success)</li>
-            <li>PDF document containing the student's mess card information.</li>
-            <li>Status 500: Error generating PDF. (on internal server error)</li>
-          </ul>
-      </ul>
-    </li>
-    <li>
       <b>POST /student/fee</b>
       <ul>
         <li>Description: Submit the student's fee payment details.</li>
@@ -134,6 +121,37 @@
             <li>Status 201: Fee payment details submitted successfully. (on success, includes the submitted data)</li>
             <li>Status 400: Missing required fields: UTR and TID. (if either UTR or TID is missing)</li>
             <li>Status 500: Error inserting Fee. (on internal server error)</li>
+          </ul>
+      </ul>
+    </li>
+    <li>
+      <b>POST /student/upload-image</b>
+      <ul>
+        <li>Description: This API endpoint allows authenticated students to upload their profile pictures.</li>
+        <li>Requires Authentication: Yes</li>
+        <li>Content-Type: multipart/form-data</li>
+        <li>Request Body:</li>
+          <ul>
+            <li>profilePicture: (image file) The UTR number of the fee payment.</li>
+          </ul>
+        <li>Response:</li>
+          <ul>
+            <li>Status 201: The image was uploaded successfully.</li>
+            <li>Status 400: Missing required field: profilePicture.</li>
+            <li>Status 500: An error occurred while uploading the image.(on internal server error)</li>
+          </ul>
+      </ul>
+    </li>
+    <li>
+      <b>GET /student/get-messcard</b>
+      <ul>
+        <li>Description: Download the student's mess card as a PDF.</li>
+        <li>Requires Authentication: Yes</li>
+        <li>Response:</li>
+          <ul>
+            <li>Content-Type: application/pdf (on success)</li>
+            <li>PDF document containing the student's mess card information.</li>
+            <li>Status 500: Error generating PDF. (on internal server error)</li>
           </ul>
       </ul>
     </li>

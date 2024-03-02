@@ -1,2 +1,4 @@
-node_modules/
+node_modules
 .env
+images
+views/card2.html
