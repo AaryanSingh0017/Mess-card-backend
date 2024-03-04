@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="/css/student_form.css" />
+</head>
+
+<body>
+  <section class="container">
+    <header> Student Registration Form</header>
+    <div style="color: red; padding-top: 10px;" id="message-container"></div>
+    <form class="form">
+      <div class="input-box">
+        <label>Full Name</label>
+        <input id="fullname" type="text" placeholder="Enter full name" required />
+      </div>
+
+      <div class="input-box">
+        <label>Email Address</label>
+        <input id="email" type="text" placeholder="Enter email address" required />
+      </div>
+      <div class="column">
+        <div class="input-box">
+          <label>Phone Number</label>
+          <input id="phone" type="number" placeholder="Enter phone number" required />
+        </div>
+        <div class="input-box">
+          <label>Birth Date</label>
+          <input id="dob" type="date" placeholder="Enter birth date" required />
+        </div>
+      </div>
+      <div class="gender-box">
+        <h3>Gender</h3>
+        <div class="gender-option">
+          <div class="gender">
+            <input type="radio" id="check-male" name="gender" checked />
+            <label for="check-male">Male</label>
+          </div>
+          <div class="gender">
+            <input type="radio" id="check-female" name="gender" />
+            <label for="check-female">Female</label>
+          </div>
+          <div class="gender">
+            <input type="radio" id="check-other" name="gender" />
+            <label for="check-other">Prefer not to say</label>
+          </div>
+        </div>
+      </div>
+      <div class="column">
+        <div class="input-box">
+          <label>Room No</label>
+          <input id="roomno" type="text" placeholder="Enter Room number" required />
+        </div>
+        <div class="input-box">
+          <label>Hostel ID</label>
+          <input id="hostelid" type="number" placeholder="Enter your Hostel Id" required />
+        </div>
+      </div>
+      <div class="input-box address">
+        <label>Address</label>
+        <input id="address" type="text" placeholder="Enter your address" required />
+        <div class="column">
+          <div class="select-box">
+            <select>
+              <option hidden>Semester</option>
+              <option>1</option>
+              <option>2</option>
+              <option>3</option>
+              <option>4</option>
+              <option>5</option>
+              <option>6</option>
+              <option>7</option>
+              <option>8</option>
+            </select>
+          </div>
+          <input id="dept" type="text" placeholder="Department" required />
+        </div>
+        <div class="column">
+          <input id="cgpa" type="number" placeholder="Enter your CGPA" required />
+          <input id="bloodgrp" type="text" placeholder="Enter Your Blood Group" required />
+        </div>
+      </div>
+      <button onclick="submitForm()" type="button">Submit</button>
+    </form>
+
+    <script>
+      async function submitForm() {
+        const apiKey = '<%= apiKey %>'
+        const Name = document.getElementById('fullname').value;
+        const EmailId = document.getElementById('email').value;
+        const PhoneNo = document.getElementById('phone').value.toString();
+        const genderSelector = document.querySelectorAll('input[name="gender-option"]').toString();
+        const DOB = document.getElementById('dob').value;
+        const Address = document.getElementById('address').value;
+        const Semester = document.querySelector('.select-box select').value;
+        const Department = document.getElementById('dept').value;
+        const CGPA = document.getElementById('cgpa').value;
+        const HostelId = document.getElementById('hostelid').value;
+        const BloodGrp = document.getElementById('bloodgrp').value;
+        const RoomNo = document.getElementById('roomno').value;
+
+        const formData = {
+          Name,
+          EmailId,
+          PhoneNo,
+          DOB,
+          Address,
+          Semester,
+          Department,
+          CGPA,
+          BloodGrp,
+          RoomNo,
+          HostelId
+        };
+
+        console.log(JSON.stringify(formData))
+
+        try {
+          const response = await fetch('/api/student/form', {
+            method: 'POST',
+            headers: {
+              'Authorization': apiKey,
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(formData)
+          });
+
+          if (response.ok) {
+            window.location.assign('/student/dashboard');
+          } else {
+            const data = await response.json()
+            const messageContainer = document.getElementById('message-container')
+            messageContainer.textContent = data.message
+          }
+        } catch (error) {
+          console.error('Error:', error);
+          alert('An error occurred. Please try again later.');
+        }
+      }
+
+      // document.querySelector('form').onsubmit = submitForm();
+    </script>
+  </section>
+</body>
+
+</html>

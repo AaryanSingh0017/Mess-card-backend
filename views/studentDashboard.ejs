@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Student Dashboard</title>
+    <link rel="stylesheet" href="/css/student.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.2.0/css/all.css">
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+
+<body>
+    <div class="container text-center">
+        <section class="main">
+            <div class="main-top">
+                <h1 style="margin-left: 0;">STUDENT DASHBOARD</h1>
+                <i class="fas fa-user-cog" onclick="logout()" style="font-size: 15px; padding-top: 20px;">Logout</i>
+            </div>
+            <script>
+                const apiKey = '<%= apiKey %>'
+                async function logout() {
+                    const response = await fetch('/api/student/logout', {
+                        method: 'POST',
+                        headers: {
+                            'Authorization': apiKey
+                        }
+                    })
+                    console.log(response)
+                    if(response.status !== 200) {
+                        alert('Error logging you out')
+                    } else {
+                        window.location.replace('/')
+                    }
+                }
+                function formClicked() {
+                    window.location.assign('/student/form')
+                }
+                function feeClicked() {
+                    window.location.assign('/student/fee')
+                }
+                function messCardClicked() {
+                    window.location.assign('/student/messcard')
+                }
+            </script>
+
+            <div class="main-skills justify-content-center">
+                <div class="card">
+                    <i class="fa-solid fa-graduation-cap"></i>
+                    <h3>Student Detail</h3>
+                    <p>Enter student details</p>
+                    <button onclick="formClicked()">Get Started</button>
+                </div>
+                <div class="card">
+                    <i class="fa-solid fa-money-bills"></i>
+                    <h3>Fee Detail</h3>
+                    <p>Enter the fee details.</p>
+                    <button onclick="feeClicked()">Get Started</button>
+                </div>
+                <div class="card">
+                    <i class="fa-sharp fa-solid fa-address-card"></i>
+                    <h3>Mess Card</h3>
+                    <p>Download Mess card</p>
+                    <button onclick="messCardClicked()">Get Started</button>
+                </div>
+            </div>
+        </section>
+    </div>
+</body>
+
+</html>

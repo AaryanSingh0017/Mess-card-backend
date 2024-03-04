@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<!---Coding By CodingLab | www.codinglabweb.com--->
+<html lang="en">
+
+<head>
+  <title>Fee Details</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="/css/student_form.css" />
+</head>
+
+<body>
+  <section class="container">
+    <header> Student Registration Form</header>
+    <div class="message-container" style="color: red; padding-top: 10px; justify-content: center;"></div>
+    <form class="form">
+      <div class="input-box">
+        <label>UTR </label>
+        <input type="text" placeholder="Enter your UTR number" id="utr" required />
+      </div>
+
+      <div class="input-box">
+        <label>TID</label>
+        <input type="text" placeholder="Enter your TID number" id="tid" required />
+      </div>
+
+      <button type="button" onclick="submitFeeForm()">Submit</button>
+    </form>
+
+    <script>
+
+      async function submitFeeForm() {
+        const apiKey = '<%= apiKey %>'
+        const UTR = document.getElementById('utr').value;
+        const TID = document.getElementById('tid').value;
+        const formData = { UTR, TID }
+        const response = await fetch('/api/student/fee', {
+          method: 'POST',
+          headers: {
+            'Authorization': apiKey,
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify(formData)
+        })
+        if(response.ok) {
+          alert('Form successfully submitted')
+          window.location.replace('/student/dashboard')
+        } else {
+          const data = await response.json()
+          document.getElementById('message-container').textContent = data.message
+        }
+      }
+    </script>
+  </section>
+</body>
+
+</html>

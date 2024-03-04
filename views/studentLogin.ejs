@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/css/login.css">
+    <title>Login and sign-up</title>
+</head>
+
+<body>
+    <br>
+    <br>
+    <div class="cont">
+        <div class="form sign-in">
+            <h2>Welcome</h2>
+            <label>
+                <span style="color: black;">USN</span>
+                <input id="usn" type="text" />
+            </label>
+            <label>
+                <span style="color: black;">Password</span>
+                <input id="pass1" type="password" />
+            </label>
+            <p class="forgot-pass" style="color: black;">Forgot password?</p>
+            <button type="button" class="submit button-shadow" onclick="signIn()">Sign In</button>
+
+        </div>
+        <div class="sub-cont">
+            <div class="img">
+                <div class="img__text m--up">
+
+                    <h3>Don't have an account? Please Sign up!<h3>
+                </div>
+                <div class="img__text m--in">
+
+                    <h3>If you already has an account, just sign in.<h3>
+                </div>
+                <div class="img__btn">
+                    <span class="m--up">Sign Up</span>
+                    <span class="m--in">Sign In</span>
+                </div>
+            </div>
+            <div class="form sign-up">
+                <h2>Create your Account</h2>
+                <label>
+                    <span style="color: black;">USN</span>
+                    <input id="usn2" type="text" />
+                </label>
+                <label>
+                    <span style="color: black;">Password</span>
+                    <input id="pass2" type="password" />
+                </label>
+                <label>
+                    <span style="color: black;"> Confirm Password</span>
+                    <input id="confirm-pass" type="password" />
+                </label>
+                <button type="button" class="submit button-shadow" onclick="signUp()">Sign Up</button>
+
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const apiKey = '<%= apiKey %>'
+        const USN = document.getElementById('usn')
+        const password = document.getElementById('pass1')
+        const USN2 = document.getElementById('usn2')
+        const pass2 = document.getElementById('pass2')
+        const confirmPass = document.getElementById('confirm-pass')
+        function signIn() {
+            const requestOptions = {
+                method: 'POST',
+                headers: {
+                    'Authorization': apiKey.toString(),
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({
+                    USN: USN.value,
+                    password: password.value
+                })
+            }
+            fetch('/api/student/login', requestOptions)
+                .then(res => {
+                    if (res.status === 200) {
+                        window.location.replace('/student/dashboard')
+                    }
+                    return res.json()
+                })
+                .then(data => {
+                    if (data.message) alert(data.message)
+                })
+        }
+        async function signUp() {
+            if (pass2.value !== confirmPass.value) {
+                alert('Please re-type the correct password')
+            } else {
+                const requestOptions = {
+                    method: 'POST',
+                    headers: {
+                        'Authorization': apiKey.toString(),
+                        'Content-Type': 'application/json'
+                    },
+                    body: JSON.stringify({
+                        USN: USN2.value,
+                        password: pass2.value
+                    })
+                }
+                const res = await fetch('/api/student/register', requestOptions)
+                if (res.status !== 201)
+                    return alert(res.message)
+                window.location.replace('/student/dashboard')
+            }
+        }
+        document.querySelector('.img__btn').addEventListener('click', function () {
+            document.querySelector('.cont').classList.toggle('s--signup');
+        });
+    </script>
+
+
+</body>
+
+</html>
