@@ -231,7 +231,12 @@ const checkImageUploaded = async (req, res, next) => {
 app.get('/student/get-messcard', checkAuthenticated, checkStdFormFilled, checkFeeFormFilled, checkImageUploaded, async (req, res) => {
   try {
     const htmlContent = await generateMessCard(req);
-    const browser = await puppeteer.launch();
+    const browser = await puppeteer.launch({
+      executablePath: 
+      process.env.NODE_ENV === 'production' 
+      ? process.env.PUPPETEER_EXECUTABLE_PATH
+      : puppeteer.executablePath()
+    });
     const page = await browser.newPage();
     await page.setContent(htmlContent);
 
