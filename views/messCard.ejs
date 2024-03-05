@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Your Mess Card</title>
+    <link rel="stylesheet" href="/css/bootstrap.min.css">
+</head>
+<body>
+    <nav class="navbar bg-body-secondary">
+        <div class="container-fluid">
+          <div class="navbar-brand" href="#">
+            Your Messcard
+          </div>
+        </div>
+    </nav>
+    <div class="justify-content-center" style="padding-top: 50px;">
+        <div id="message-container" style="color: red; text-align: center;"></div>
+        <div id="card-container" class="d-flex justify-content-center align-items-center"></div>
+    </div>
+</body>
+<script>
+    const apiKey = '<%= apiKey %>'
+    async function getMesscard () {
+        const res = await fetch('/api/student/get-messcard', {
+            method: 'GET',
+            headers: {
+                'Authorization': apiKey
+            }
+        })
+        console.log(res)
+        if(res.status !== 200){
+            const data = await res.json()
+            console.log(data)
+            document.getElementById('message-container').textContent = data.message
+            const cardHolder = document.getElementById('card-container')
+            fetch('/content/pingpongloader')
+                .then(res => res.text())
+                .then(text => cardHolder.innerHTML = text)
+        } else {
+            const blob = await res.blob()
+            const url = URL.createObjectURL(blob)
+            document.getElementById('card-container').innerHTML = '<iframe src="'+url+'" width="80%" height="600px"></iframe>'
+        }
+    }
+    getMesscard()
+</script>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href='https://unpkg.com/boxicons@2.0.9/css/boxicons.min.css' rel='stylesheet'>
+    <link rel="stylesheet" href="/css/upload-image.css">
+    <title>Upload Profile Picture</title>
+</head>
+
+<body>
+
+    <div class="container">
+        <input type="file" id="file" accept="image/*" hidden>
+        <div class="img-area" data-img="">
+            <i class='bx bxs-cloud-upload icon'></i>
+            <h3>Upload Image</h3>
+            <p>Image size must be less than <span>2MB</span></p>
+        </div>
+        <button class="select-image">Select Image</button>
+        <div id="upload-button" style="padding-top: 15px;"></div>
+    </div>
+
+    <script>
+        const selectImage = document.querySelector('.select-image');
+        const inputFile = document.querySelector('#file');
+        const imgArea = document.querySelector('.img-area');
+        const apiKey = '<%= apiKey %>'
+
+        selectImage.addEventListener('click', function () {
+            inputFile.click();
+        })
+
+        inputFile.addEventListener('change', function () {
+            const image = this.files[0]
+            if (image.size < 2000000) {
+                const reader = new FileReader();
+                reader.onload = () => {
+                    const allImg = imgArea.querySelectorAll('img');
+                    allImg.forEach(item => item.remove());
+                    const imgUrl = reader.result;
+                    const img = document.createElement('img');
+                    img.src = imgUrl;
+                    imgArea.appendChild(img);
+                    imgArea.classList.add('active');
+                    imgArea.dataset.img = image.name;
+                }
+                reader.readAsDataURL(image);
+                document.getElementById('upload-button').innerHTML = '<button class="select-image">Upload Image</button>'
+            } else {
+                alert("Image size more than 2MB");
+            }
+        })
+        const uploadImg = document.getElementById('upload-button')
+        uploadImg.addEventListener('click', async () => {
+            const image = inputFile.files[0]
+            const formData = new FormData()
+            formData.append('profilePicture', image)
+            const res = await fetch('/api/student/upload-image', {
+                method: 'POST',
+                headers: {
+                    'Authorization': apiKey
+                },
+                body: formData
+            })
+            if(res.status === 201) {
+                alert('Image uploaded successfully')
+                window.location.assign('/student/dashboard')
+            } else {
+                const data = await res.json()
+                alert(data.message)
+            }
+        })
+    </script>
+</body>
+
+</html>

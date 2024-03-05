@@ -12,6 +12,8 @@ const flash = require('express-flash');
 const session = require('express-session');
 const StudentLogin = require('./models/StudentLogin');
 const apiRoutes = require('./api')
+const AdminLogin = require('./models/AdminLogin')
+const adminApiRoutes = require('./adminApi')
 
 initializePassport(
   passport,
@@ -22,6 +24,14 @@ initializePassport(
     } catch (err) {
       console.error('Error fetching user:', err);
       //throw new Error('Internal server error');
+    }
+  },
+  async (username) => {
+    try {
+      const user = await AdminLogin.findByPk(username)
+      return user;
+    } catch(err) {
+      console.error('Error fetching user:', err)
     }
   }
 )
@@ -43,6 +53,7 @@ sequelize.sync({ force: false }).then(() => {
   console.log('Database and tables synced');
 });
 
+app.use('/api/admin', adminApiRoutes)
 app.use('/api', apiRoutes)
 app.use('/', uiRoutes)
 

@@ -12,8 +12,7 @@ body{
   background: #dfe9f5;
   width: 100%;
   height: 100%;
-  background-image: url(sachin1.jpg);
-  
+  background-image: url(../images/bg_dashboard.jpg);
 }
 .container{
   display: flex;
@@ -194,4 +193,21 @@ a:hover{
 }
 .js{
   color: rgb(28, 98, 179);
+}
+
+.button-shadow {
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  cursor: pointer;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}
+
+.button-shadow:hover {
+  box-shadow: 0 5px 10px rgba(0, 0, 0, 0.4);
+}
+
+.button-shadow:active {
+  box-shadow: 0 3px 7px rgba(0, 0, 0, 0.5);
+  transform: translateY(2px);
 }

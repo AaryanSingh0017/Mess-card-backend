@@ -7,6 +7,7 @@ const StudentLogin = require('./models/StudentLogin')
 const ejs = require('ejs')
 const fs = require('fs')
 const Picture = require('./models/Picture')
+const Helper = require('./helpers/helpers')
 const puppeteer = require('puppeteer')
 const multer = require('multer')
 const storage = multer.diskStorage({
@@ -61,13 +62,6 @@ router.post('/student/register', async (req, res) => {
     }
 })
 
-const checkAuthenticated = (req, res, next) => {
-    if (req.isAuthenticated()) {
-        return next()
-    }
-    return res.status(401).json({ message: 'You must login first' })
-}
-
 router.post('/student/login', async (req, res) => {
     const { USN, password } = req.body;
     if (!USN || !password) {
@@ -90,7 +84,7 @@ router.post('/student/login', async (req, res) => {
                 console.error('Error logging in user:', err);
                 return res.status(500).send({ message: 'Internal server error.' });
             }
-
+            req.session.passport.type = 'student'
             res.status(200).json({ message: 'Login successful!' });
         });
     } catch (err) {
@@ -99,7 +93,9 @@ router.post('/student/login', async (req, res) => {
     }
 })
 
-router.post('/student/logout', checkAuthenticated, (req, res) => {
+router.post('/student/logout', Helper.checkStudentAuthenticated, (req, res) => {
+    if(req.session.passport.type !== 'student')
+        return res.status(403).json({ message: 'User is not student'})
     req.logout(err => {
         if (err) {
             return res.status(500).send({ message: 'Internal server error.' })
@@ -112,7 +108,7 @@ router.get('/student/is-logged-in', (req, res) => {
     return res.status(200).json({ result: req.isAuthenticated() })
 })
 
-router.post('/student/form', checkAuthenticated, async (req, res) => {
+router.post('/student/form', Helper.checkStudentAuthenticated, async (req, res) => {
     try {
         const nullFields = [];
         for (const field of ['Name', 'Department', 'Semester', 'Address',
@@ -157,7 +153,7 @@ router.post('/student/form', checkAuthenticated, async (req, res) => {
     }
 });
 
-router.post('/student/fee', checkAuthenticated, async (req, res) => {
+router.post('/student/fee', Helper.checkStudentAuthenticated, async (req, res) => {
     try {
         const { UTR, TID } = req.body;
         if (!UTR || !TID) {
@@ -188,6 +184,10 @@ const checkFeeFormFilled = async (req, res, next) => {
     const fee = await Fee.findByPk(req.session.passport.user)
     if (!fee) {
         return res.status(401).json({ message: 'Fill fee detail form first.' })
+    } else if(fee.Status === 'Pending') {
+        return res.status(401).json({ message: 'Your Fee payment is yet to be verified. Please wait'})
+    } else if(fee.Status === 'Rejected') {
+        return res.status(401).json({ message: 'Your application is rejected. Please contact admin for further updates'})
     }
     next()
 }
@@ -200,7 +200,7 @@ const checkImageUploaded = async (req, res, next) => {
     next()
 }
 
-router.get('/student/get-messcard', checkAuthenticated, checkStdFormFilled, checkFeeFormFilled, checkImageUploaded, async (req, res) => {
+router.get('/student/get-messcard', Helper.checkStudentAuthenticated, checkStdFormFilled, checkImageUploaded, checkFeeFormFilled, async (req, res) => {
     try {
         const htmlContent = await generateMessCard(req);
         const browser = await puppeteer.launch({
@@ -233,7 +233,18 @@ router.get('/student/get-messcard', checkAuthenticated, checkStdFormFilled, chec
     }
 });
 
-router.post('/student/upload-image', checkAuthenticated, upload.single('profilePicture'), async (req, res) => {
+const checkImageNotUploaded = async (req, res, next) => {
+    try {
+        const img = await Picture.findByPk(req.session.passport.user)
+        if(img)
+            return res.status(403).json({ message: "Image already uploaded. Contact admin to edit"})
+        next()
+    } catch(e) {
+        return res.status(500).json({ message: 'Internal server error'})
+    }
+}
+
+router.post('/student/upload-image', Helper.checkStudentAuthenticated, checkImageNotUploaded, upload.single('profilePicture'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: 'Missing field: profilePicture' })
@@ -244,7 +255,14 @@ router.post('/student/upload-image', checkAuthenticated, upload.single('profileP
             USN: req.session.passport.user,
             profilePicture: dataUrl
         })
-        fs.unlink(req.file.path)
+        fs.unlink(req.file.path, (err) => {
+            if (err) {
+              console.error(err);
+            } else {
+              console.log("Temporary Image File deleted successfully");
+            }
+          });
+          
         res.status(201).json({ message: 'Image uploaded successfully', data: img })
     } catch (e) {
         console.log(e)
@@ -289,28 +307,5 @@ async function generateMessCard(req) {
         throw error;
     }
 }
-
-router.post('/admin/login', async (req, res) => {
-    try {
-        const {password} = req.body
-        if(!password) {
-            return res.status(400).json({message : 'Missing fields: password'})
-        }
-        const admin = await StudentLogin.findByPk('Admin')
-        if( ! await bcrypt.compare(password, admin.password )) {
-            return res.status(401).json({ message: 'Incorrect password'})
-        }
-        req.logIn(admin, (err) => {
-            if (err) {
-                console.error('Error logging in user:', err);
-                return res.status(500).send({ message: 'Error logging in' });
-            }
-
-            res.status(200).json({ message: 'Login successful!' });
-        });
-    } catch(e) {
-        return res.status(500).json({ message : 'Error logging in'})
-    }
-})
 
 module.exports = router

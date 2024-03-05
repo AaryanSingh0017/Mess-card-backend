@@ -14,19 +14,18 @@
     <div class="container text-center">
         <section class="main">
             <div class="main-top">
-                <h1 style="margin-left: 0;">STUDENT DASHBOARD</h1>
-                <i onclick="logout()" class="fas fa-user-cog button-shadow" style="font-size: 15px; padding-top: 20px;">Logout</i>
+                <h1 style="margin-left: 0;">ADMIN DASHBOARD</h1>
+                <i class="fas fa-user-cog button-shadow" onclick="logout()" style="font-size: 15px; padding-top: 20px;">Logout</i>
             </div>
             <script>
                 const apiKey = '<%= apiKey %>'
                 async function logout() {
-                    const response = await fetch('/api/student/logout', {
+                    const response = await fetch('/api/admin/logout', {
                         method: 'POST',
                         headers: {
                             'Authorization': apiKey
                         }
                     })
-                    console.log(response)
                     if(response.status !== 200) {
                         alert('Error logging you out')
                     } else {
@@ -34,42 +33,33 @@
                     }
                 }
                 function formClicked() {
-                    window.location.assign('/student/form')
+                    window.location.assign('/admin/admin-report')
                 }
                 function feeClicked() {
-                    window.location.assign('/student/fee')
+                    window.location.assign('/admin/student-report')
                 }
                 function messCardClicked() {
-                    window.location.assign('/student/messcard')
-                }
-                function imageClicked() {
-                    window.location.assign('/student/upload-image')
+                    window.location.assign('/')
                 }
             </script>
 
             <div class="main-skills justify-content-center">
                 <div class="card">
                     <i class="fa-solid fa-graduation-cap"></i>
-                    <h3>Student Form</h3>
-                    <p>Enter student details</p>
+                    <h3>Admins Details</h3>
+                    <p>View other Admins</p>
                     <button onclick="formClicked()">Get Started</button>
                 </div>
                 <div class="card">
                     <i class="fa-solid fa-money-bills"></i>
-                    <h3>Fee Form</h3>
-                    <p>Enter the fee details.</p>
+                    <h3>Mess Details</h3>
+                    <p>View Mess members</p>
                     <button onclick="feeClicked()">Get Started</button>
                 </div>
                 <div class="card">
-                    <i class="fa-solid fa-graduation-cap"></i>
-                    <h3>Add Image</h3>
-                    <p>Upload Profile Picture</p>
-                    <button onclick="imageClicked()">Get Started</button>
-                </div>
-                <div class="card">
                     <i class="fa-sharp fa-solid fa-address-card"></i>
-                    <h3>Mess Card</h3>
-                    <p>Download Mess card</p>
+                    <h3>Home</h3>
+                    <p>Go back to home page</p>
                     <button onclick="messCardClicked()">Get Started</button>
                 </div>
             </div>

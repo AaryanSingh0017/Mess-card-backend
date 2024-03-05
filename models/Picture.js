@@ -3,7 +3,7 @@ const {DataTypes} = require('sequelize')
 
 const Picture = sequelize.define('Picture', {
     profilePicture: {
-        type: DataTypes.BLOB,
+        type: DataTypes.BLOB('long'),
         allowNull: true,
     },
     USN: {
