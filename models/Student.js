@@ -16,7 +16,7 @@ const Student = sequelize.define('Student', {
     type: DataTypes.INTEGER,
   },
   Address: {
-    type: DataTypes.STRING(50),
+    type: DataTypes.STRING,
   },
   PhoneNo: {
     type: DataTypes.STRING(10),

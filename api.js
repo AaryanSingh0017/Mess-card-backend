@@ -110,6 +110,34 @@ router.get('/student/is-logged-in', (req, res) => {
     return res.status(200).json({ result: req.isAuthenticated() })
 })
 
+const checkStdFormFilled = async (req, res, next) => {
+    const student = await Student.findByPk(req.session.passport.user)
+    if (!student) {
+        return res.status(401).json({ message: 'Fill student detail form first.' })
+    }
+    next()
+}
+
+const checkFeeFormFilled = async (req, res, next) => {
+    const fee = await Fee.findByPk(req.session.passport.user)
+    if (!fee) {
+        return res.status(401).json({ message: 'Fill fee detail form first.' })
+    } else if(fee.Status === 'Pending') {
+        return res.status(401).json({ message: 'Your Fee payment is yet to be verified. Please wait'})
+    } else if(fee.Status === 'Rejected') {
+        return res.status(401).json({ message: 'Your application is rejected. Please contact admin for further updates'})
+    }
+    next()
+}
+
+const checkImageUploaded = async (req, res, next) => {
+    const image = await Picture.findByPk(req.session.passport.user)
+    if (!image) {
+        return res.status(401).json({ message: 'Upload profile picture to obtain mess card.' })
+    }
+    next()
+}
+
 router.post('/student/form', Helper.checkStudentAuthenticated, async (req, res) => {
     try {
         const nullFields = [];
@@ -155,7 +183,7 @@ router.post('/student/form', Helper.checkStudentAuthenticated, async (req, res) 
     }
 });
 
-router.post('/student/fee', Helper.checkStudentAuthenticated, async (req, res) => {
+router.post('/student/fee', Helper.checkStudentAuthenticated, checkStdFormFilled, async (req, res) => {
     try {
         const { UTR, TID } = req.body;
         if (!UTR || !TID) {
@@ -173,34 +201,6 @@ router.post('/student/fee', Helper.checkStudentAuthenticated, async (req, res) =
         res.status(500).json({ message: 'Error inserting Fee.' })
     }
 })
-
-const checkStdFormFilled = async (req, res, next) => {
-    const student = await Student.findByPk(req.session.passport.user)
-    if (!student) {
-        return res.status(401).json({ message: 'Fill student detail form first.' })
-    }
-    next()
-}
-
-const checkFeeFormFilled = async (req, res, next) => {
-    const fee = await Fee.findByPk(req.session.passport.user)
-    if (!fee) {
-        return res.status(401).json({ message: 'Fill fee detail form first.' })
-    } else if(fee.Status === 'Pending') {
-        return res.status(401).json({ message: 'Your Fee payment is yet to be verified. Please wait'})
-    } else if(fee.Status === 'Rejected') {
-        return res.status(401).json({ message: 'Your application is rejected. Please contact admin for further updates'})
-    }
-    next()
-}
-
-const checkImageUploaded = async (req, res, next) => {
-    const image = await Picture.findByPk(req.session.passport.user)
-    if (!image) {
-        return res.status(401).json({ message: 'Upload profile picture to obtain mess card.' })
-    }
-    next()
-}
 
 router.get('/student/get-messcard', Helper.checkStudentAuthenticated, checkStdFormFilled, checkImageUploaded, checkFeeFormFilled, async (req, res) => {
     try {
@@ -246,7 +246,7 @@ const checkImageNotUploaded = async (req, res, next) => {
     }
 }
 
-router.post('/student/upload-image', Helper.checkStudentAuthenticated, checkImageNotUploaded, upload.single('profilePicture'), async (req, res) => {
+router.post('/student/upload-image', Helper.checkStudentAuthenticated, checkStdFormFilled, checkImageNotUploaded, upload.single('profilePicture'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({ message: 'Missing field: profilePicture' })

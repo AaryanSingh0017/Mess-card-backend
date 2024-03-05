@@ -62,7 +62,9 @@ router.post('/update-student/:USN', Helper.checkAdminAuthenticated, async (req, 
         const student = await Fee.findByPk(req.params.USN)
         if (!student)
             return res.status(403).json({ message: 'Invalid value for USN' })
-        await Fee.update(student, {
+        await Fee.update({
+            Status: Status
+        }, {
             where: {USN: req.params.USN}
         })
         return res.status(201).json({ message: 'Status updated successfully' })
