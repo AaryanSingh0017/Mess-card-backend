@@ -54,6 +54,7 @@ router.post('/student/register', async (req, res) => {
         const newUser = await StudentLogin.create({ USN, password: hashedPassword });
         req.logIn(newUser, err => {
             if (err) res.status(500).send({ message: 'Internal server error.' })
+            req.session.passport.type = 'student'
             res.status(201).send({ message: 'User registered successfully!', data: newUser });
         })
     } catch (err) {
