@@ -10,14 +10,15 @@ const Picture = require('./models/Picture')
 const Helper = require('./helpers/helpers')
 const puppeteer = require('puppeteer')
 const multer = require('multer')
-const storage = multer.diskStorage({
-    destination: (req, file, callback) => {
-        callback(null, 'images')
-    },
-    filename: (req, file, callback) => {
-        callback(null, `${req.session.passport.user}.jpg`)
-    }
-});
+const storage = multer.memoryStorage()
+// const storage = multer.diskStorage({
+//     destination: (req, file, callback) => {
+//         callback(null, 'images')
+//     },
+//     filename: (req, file, callback) => {
+//         callback(null, `${req.session.passport.user}.jpg`)
+//     }
+// });
 const upload = multer({ storage })
 
 const checkAPIKey = (req, res, next) => {
@@ -250,20 +251,12 @@ router.post('/student/upload-image', Helper.checkStudentAuthenticated, checkImag
         if (!req.file) {
             return res.status(400).json({ message: 'Missing field: profilePicture' })
         }
-        const imageBuffer = fs.readFileSync(req.file.path)
+        const imageBuffer = req.file.buffer
         const dataUrl = getImageDataUrl(req, imageBuffer)
         const img = await Picture.create({
             USN: req.session.passport.user,
             profilePicture: dataUrl
         })
-        fs.unlink(req.file.path, (err) => {
-            if (err) {
-              console.error(err);
-            } else {
-              console.log("Temporary Image File deleted successfully");
-            }
-          });
-          
         res.status(201).json({ message: 'Image uploaded successfully', data: img })
     } catch (e) {
         console.log(e)
