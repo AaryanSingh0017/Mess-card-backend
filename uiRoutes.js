@@ -3,7 +3,6 @@ const Student = require('./models/Student')
 const Fee = require('./models/Fee')
 const router = express.Router()
 const Helper = require('./helpers/helpers')
-const Dapp = require('./dapp-interact')
 
 router.get('', (req, res) => {
     res.render('index')
@@ -15,10 +14,6 @@ router.get('/about', (req, res) => {
 
 router.get('/contact', (req, res) => {
     res.render('contact')
-})
-
-router.get('/rooms', (req, res) => {
-    res.render('rooms')
 })
 
 router.get('/student/login', Helper.isStudentNotLoggedIn, (req, res) => {

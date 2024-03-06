@@ -25,22 +25,22 @@
   <body>
 		<nav class="navbar navbar-expand-lg navbar-dark ftco_navbar bg-dark ftco-navbar-light" id="ftco-navbar">
 	    <div class="container">
-	    	<a class="navbar-brand" href="index.html">Hostel<span>Contacts</span></a>
+	    	<div class="navbar-brand">Hostel<span>Contacts</span></div>
 	      <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#ftco-nav" aria-controls="ftco-nav" aria-expanded="false" aria-label="Toggle navigation">
 	        <span class="fa fa-bars"></span> Menu
 	      </button>
 	      <div class="collapse navbar-collapse" id="ftco-nav">
 	        <ul class="navbar-nav ml-auto">
-	        	<li class="nav-item"><a href="index.html" class="nav-link">Home</a></li>
-	        	<li class="nav-item"><a href="index.html" class="nav-link">About</a></li>
-	          <li class="nav-item active"><a href="index.html" class="nav-link">Contact</a></li>
+	        	<li class="nav-item"><a href="/" class="nav-link">Home</a></li>
+	        	<li class="nav-item"><a href="/about" class="nav-link">About</a></li>
+	          <li class="nav-item active"><a href="/contact" class="nav-link">Contact</a></li>
 	        </ul>
 	      </div>
 	    </div>
 	  </nav>
     <!-- END nav -->
 
-    <section class="hero-wrap hero-wrap-2" style="background-image: url('images/bg_2.jpg');" data-stellar-background-ratio="0.5">
+    <section class="hero-wrap hero-wrap-2" style="background-image: url('images/room-3.jpg');" data-stellar-background-ratio="0.5">
       <div class="overlay"></div>
       <div class="container">
         <div class="row no-gutters slider-text align-items-center justify-content-center">
@@ -55,25 +55,13 @@
    	<section class="ftco-section bg-light">
     	<div class="container">
     		<div class="row no-gutters">
-    			<div class="col-md-8">
-    				<div id="map" class="map"></div>
-    			</div>
-    			<div class="col-md-4 p-4 p-md-5 bg-white">
-    				<h2 class="font-weight-bold mb-4">Lets get started</h2>
-    				<p>Far far away, behind the word mountains, far from the countries Vokalia and Consonantia, there live the blind texts. Separated they live in Bookmarksgrove right at the coast of the Semantics, a large language ocean.</p>
-    				<p><a href="#" class="btn btn-primary">Book Apartment Now</a></p>
-    			</div>
 					<div class="col-md-12">
 						<div class="wrapper">
 							<div class="row no-gutters">
 								<div class="col-lg-8 col-md-7 d-flex align-items-stretch">
 									<div class="contact-wrap w-100 p-md-5 p-4">
 										<h3 class="mb-4">Get in touch</h3>
-										<div id="form-message-warning" class="mb-4"></div> 
-					      		<div id="form-message-success" class="mb-4">
-					            Your message was sent, thank you!
-					      		</div>
-										<form method="POST" id="contactForm" name="contactForm" class="contactForm">
+										<form class="contactForm">
 											<div class="row">
 												<div class="col-md-6">
 													<div class="form-group">
@@ -101,8 +89,7 @@
 												</div>
 												<div class="col-md-12">
 													<div class="form-group">
-														<input type="submit" value="Send Message" class="btn btn-primary">
-														<div class="submitting"></div>
+														<input type="button" value="Send Message" onclick="window.location.reload()" class="btn btn-primary">
 													</div>
 												</div>
 											</div>
@@ -118,7 +105,7 @@
 					        			<span class="fa fa-map-marker"></span>
 					        		</div>
 					        		<div class="text pl-3">
-						            <p><span>Address:</span> 198 West 21th Street, Suite 721 New York NY 10016</p>
+						            <p><span>Address:</span> RVCE Campus, RV  College of Engineering, Mysuru Road, Bengaluru-560059</p>
 						          </div>
 					          </div>
 					        	<div class="dbox w-100 d-flex align-items-center">
@@ -134,7 +121,7 @@
 					        			<span class="fa fa-paper-plane"></span>
 					        		</div>
 					        		<div class="text pl-3">
-						            <p><span>Email:</span> <a href="mailto:info@yoursite.com">info@yoursite.com</a></p>
+						            <p><span>Email:</span> <a href="mailto:rvce.bh@rvce.edu.in">rvce.bh@rvce.edu.in</a></p>
 						          </div>
 					          </div>
 					        	<div class="dbox w-100 d-flex align-items-center">
@@ -142,7 +129,7 @@
 					        			<span class="fa fa-globe"></span>
 					        		</div>
 					        		<div class="text pl-3">
-						            <p><span>Website</span> <a href="#">yoursite.com</a></p>
+						            <p><span>Website</span> <a href="https://rvce.edu.in" target="_blank">rvce.edu.in</a></p>
 						          </div>
 					          </div>
 				          </div>
@@ -154,54 +141,7 @@
     	</div>
     </section>
 		
-    <footer class="footer">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-6 col-lg-3 mb-md-0 mb-4">
-						<h2 class="footer-heading"><a href="#" class="logo">Vacation Rental</a></h2>
-						<p>A small river named Duden flows by their place and supplies it with the necessary regelialia.</p>
-						<a href="#">Read more <span class="fa fa-chevron-right" style="font-size: 11px;"></span></a>
-					</div>
-					<div class="col-md-6 col-lg-3 mb-md-0 mb-4">
-						<h2 class="footer-heading">Services</h2>
-						<ul class="list-unstyled">
-              <li><a href="#" class="py-1 d-block">Map Direction</a></li>
-              <li><a href="#" class="py-1 d-block">Accomodation Services</a></li>
-              <li><a href="#" class="py-1 d-block">Great Experience</a></li>
-              <li><a href="#" class="py-1 d-block">Perfect central location</a></li>
-            </ul>
-					</div>
-					<div class="col-md-6 col-lg-3 mb-md-0 mb-4">
-						<h2 class="footer-heading">Tag cloud</h2>
-						<div class="tagcloud">
-	            <a href="#" class="tag-cloud-link">apartment</a>
-	            <a href="#" class="tag-cloud-link">home</a>
-	            <a href="#" class="tag-cloud-link">vacation</a>
-	            <a href="#" class="tag-cloud-link">rental</a>
-	            <a href="#" class="tag-cloud-link">rent</a>
-	            <a href="#" class="tag-cloud-link">house</a>
-	            <a href="#" class="tag-cloud-link">place</a>
-	            <a href="#" class="tag-cloud-link">drinks</a>
-	          </div>
-					</div>
-					<div class="col-md-6 col-lg-3 mb-md-0 mb-4">
-						<h2 class="footer-heading">Subcribe</h2>
-						<form action="#" class="subscribe-form">
-              <div class="form-group d-flex">
-                <input type="text" class="form-control rounded-left" placeholder="Enter email address">
-                <button type="submit" class="form-control submit rounded-right"><span class="sr-only">Submit</span><i class="fa fa-paper-plane"></i></button>
-              </div>
-            </form>
-            <h2 class="footer-heading mt-5">Follow us</h2>
-            <ul class="ftco-footer-social p-0">
-              <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Twitter"><span class="fa fa-twitter"></span></a></li>
-              <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Facebook"><span class="fa fa-facebook"></span></a></li>
-              <li class="ftco-animate"><a href="#" data-toggle="tooltip" data-placement="top" title="Instagram"><span class="fa fa-instagram"></span></a></li>
-            </ul>
-					</div>
-				</div>
-			</div>
-		</footer>
+    
     
   
 
