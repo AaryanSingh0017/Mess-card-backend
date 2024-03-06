@@ -14,6 +14,7 @@ const StudentLogin = require('./models/StudentLogin');
 const apiRoutes = require('./api')
 const AdminLogin = require('./models/AdminLogin')
 const adminApiRoutes = require('./adminApi')
+const securityRoutes = require('./securityRoutes')
 
 initializePassport(
   passport,
@@ -55,6 +56,7 @@ sequelize.sync({ force: false }).then(() => {
 
 app.use('/api/admin', adminApiRoutes)
 app.use('/api', apiRoutes)
+app.use('/security', securityRoutes)
 app.use('/', uiRoutes)
 
 

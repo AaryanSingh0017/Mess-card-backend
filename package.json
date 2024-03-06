@@ -1,5 +1,6 @@
 {
   "dependencies": {
+    "@truffle/hdwallet-provider": "^2.1.15",
     "bcrypt": "^5.1.1",
     "body-parser": "^1.20.2",
     "ejs": "^3.1.9",
@@ -12,7 +13,8 @@
     "passport": "^0.7.0",
     "passport-local": "^1.0.0",
     "puppeteer": "^22.3.0",
-    "sequelize": "^6.37.1"
+    "sequelize": "^6.37.1",
+    "web3": "^4.5.0"
   },
   "name": "backend",
   "version": "1.0.0",

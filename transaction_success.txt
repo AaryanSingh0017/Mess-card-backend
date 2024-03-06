@@ -1,0 +1,30 @@
+1_studentMessCard.js
+====================
+
+   Deploying 'StudentMessCard'
+   ---------------------------
+   > transaction hash:    0x2be3f3b11632acf6a4a3df9884a2d60c82bf7f596c0fd10d24edfe0304647347
+   > Blocks: 1            Seconds: 28
+   > contract address:    0x392ABecb1C7895655bC01d4f23B0D0D1F8Ab53BC
+   > block number:        5426448
+   > block timestamp:     1709703684
+   > account:             0x8662A5841E5De232a0e619d0314FC1c143bde78F
+   > balance:             0.249228021309949042
+   > gas used:            293631 (0x47aff)
+   > gas price:           2.629077618 gwei
+   > value sent:          0 ETH
+   > total cost:          0.000771978690050958 ETH
+
+   Pausing for 2 confirmations...
+
+   -------------------------------
+   > confirmation number: 1 (block: 5426449)
+   > confirmation number: 2 (block: 5426450)
+   > Saving artifacts
+   -------------------------------------
+   > Total cost:     0.000771978690050958 ETH
+
+Summary
+=======
+> Total deployments:   1
+> Final cost:          0.000771978690050958 ETH

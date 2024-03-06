@@ -3,6 +3,202 @@
 <head>
     <title>Your Mess Card</title>
     <link rel="stylesheet" href="/css/bootstrap.min.css">
+    <style>
+        body {
+            /* background: #FF9441; */
+            margin: 0;
+        }
+
+        h1 {
+            display: block;
+            width: 100%;
+            position: absolute;
+            text-align: center;
+            font-family: sans-serif;
+            color: #FFF;
+        }
+
+        .spinner {
+            position: absolute;
+            top: 10%;
+            left: 50%;
+            text-align: center;
+            transform: translateX(-50%);
+
+            .ball-container {
+                width: 40px;
+                transform: translate(130px, -140px);
+            }
+
+            .ball {
+                width: 40px;
+                transform-origin: bottom;
+                animation: bounce 500ms infinite alternate cubic-bezier(0.35, 0.50, 0.65, 0.50);
+
+                circle {
+                    fill: grey;
+                }
+            }
+
+            .raquet {
+                transform-origin: bottom;
+                width: 85px;
+                height: 142px;
+
+                #sor-1 {
+                    fill: rgba(0, 0, 0, 0.2);
+                    animation: shadow 500ms infinite 500ms alternate cubic-bezier(0.35, 0.50, 0.65, 0.50);
+                }
+
+                #sor-2 {
+                    fill: rgba(0, 0, 0, 0.2);
+                    animation: shadow 500ms infinite alternate cubic-bezier(0.35, 0.50, 0.65, 0.50);
+                }
+
+                &#r-1 {
+                    transform: translateX(70px) rotateZ(45deg);
+                    animation: hit-1 1000ms infinite 300ms ease-in-out;
+                }
+
+                &#r-2 {
+                    transform: translateX(-70px) rotateZ(-45deg);
+                    animation: hit-2 1000ms infinite -200ms ease-in-out;
+                }
+
+                .front {
+                    fill: #222;
+                }
+
+                .middle {
+                    fill: #070;
+                }
+
+                .back {
+                    fill: #D00;
+                }
+
+                .handle {
+                    &.outer {
+                        fill: #a8712a;
+                    }
+
+                    &.inner {
+                        fill: #e0973e;
+                    }
+                }
+            }
+
+            .shadow {
+                transform: translateY(-150px);
+                -webkit-filter: blur(2px);
+
+                ellipse {
+                    fill: rgba(0, 0, 0, 0.1)
+                }
+
+                #sr-1,
+                #sr-2,
+                #sb {
+                    transform-origin: center;
+                }
+
+                #sr-1 {
+                    animation: grow 1000ms infinite -200ms ease-in-out;
+                }
+
+                #sr-2 {
+                    animation: grow 1000ms infinite 300ms ease-in-out;
+                }
+
+                #sb {
+                    animation: swing 500ms infinite alternate cubic-bezier(0.35, 0.50, 0.65, 0.50);
+                }
+            }
+        }
+
+        @keyframes bounce {
+            0% {
+                transform: rotateZ(45deg);
+            }
+
+            100% {
+                transform: rotateZ(-45deg);
+            }
+        }
+
+        @keyframes swing {
+            0% {
+                opacity: 0;
+                transform: translateX(70px) scale(1.2);
+            }
+
+            25%,
+            75% {
+                opacity: 0;
+            }
+
+            50% {
+                opacity: 1;
+                transform: translateX(0px) scale(0.9);
+            }
+
+            100% {
+                opacity: 0;
+                transform: translateX(-70px) scale(1.2);
+            }
+        }
+
+        @keyframes hit-1 {
+
+            0%,
+            50%,
+            100% {
+                transform: translate(70px, 3px) rotateZ(45deg);
+            }
+
+            75% {
+                transform: translate(69px, -2px) rotateZ(42deg);
+            }
+        }
+
+        @keyframes hit-2 {
+
+            0%,
+            50%,
+            100% {
+                transform: translate(-70px, 3px) rotateZ(-45deg);
+            }
+
+            75% {
+                transform: translate(-69px, -2px) rotateZ(-42deg);
+            }
+        }
+
+        @keyframes grow {
+
+            0%,
+            50%,
+            100% {
+                transform: scale(1);
+            }
+
+            75% {
+                transform: scale(0.9);
+            }
+        }
+
+        @keyframes shadow {
+
+            0%,
+            40% {
+                transform: translate(25px, 200px) scale(0.5);
+            }
+
+            100% {
+                transform: translate(0px, 0px) scale(1);
+            }
+        }
+    </style>
 </head>
 <body>
     <nav class="navbar bg-body-secondary">
@@ -13,11 +209,44 @@
         </div>
     </nav>
     <div class="justify-content-center" style="padding-top: 50px;">
-        <div id="message-container" style="color: red; text-align: center;"></div>
-        <div id="card-container" class="d-flex justify-content-center align-items-center"></div>
+        <div id="message-container" style="color: red; text-align: center;">Loading...</div>
+        <div id="card-container" class="d-flex justify-content-center align-items-center">
+            <div class="spinner" style="padding-top: 100px;">
+                <svg class="raquet" id="r-1">
+                    <ellipse class="front" cx="44" cy="50" rx="35" ry="50" />
+                    <ellipse class="middle" cx="42" cy="50" rx="35" ry="50" />
+                    <ellipse class="back" cx="40" cy="50" rx="35" ry="50" />
+                    <rect class="handle outer" x="40" y="100" width="10" height="42" />
+                    <rect class="handle inner" x="38" y="100" width="10" height="41" />
+                    <rect class="handle outer" x="35" y="100" width="10" height="40" />
+                    <ellipse class="shadow" id="sor-1" cx="40" cy="50" rx="7" ry="10" />
+                </svg>
+                <svg class="raquet" id="r-2">
+                    <ellipse class="back" cx="40" cy="50" rx="35" ry="50" />
+                    <ellipse class="middle" cx="42" cy="50" rx="35" ry="50" />
+                    <ellipse class="front" cx="44" cy="50" rx="35" ry="50" />
+                    <rect class="handle outer" x="35" y="100" width="10" height="42" />
+                    <rect class="handle inner" x="37" y="100" width="10" height="41" />
+                    <rect class="handle outer" x="40" y="100" width="10" height="40" />
+                    <ellipse class="shadow" id="sor-2" cx="44" cy="50" rx="7" ry="10" />
+                </svg>
+                <div class="ball-container">
+                    <svg class="ball">
+                        <circle cx="20" cy="20" r="12" />
+                    </svg>
+                </div>
+                <svg class="shadow">
+                    <ellipse id="sr-1" cx="70" cy="30" rx="50" ry="15" />
+                    <ellipse id="sb" cx="150" cy="30" rx="15" ry="4.5" />
+                    <ellipse id="sr-2" cx="230" cy="30" rx="50" ry="15" />
+                </svg>
+            </div>
+        </div>
     </div>
 </body>
 <script>
+    const cardHolder = document.getElementById('card-container')
+    const messageContainer = document.getElementById('message-container')
     const apiKey = '<%= apiKey %>'
     async function getMesscard () {
         const res = await fetch('/api/student/get-messcard', {
@@ -30,15 +259,12 @@
         if(res.status !== 200){
             const data = await res.json()
             console.log(data)
-            document.getElementById('message-container').textContent = data.message
-            const cardHolder = document.getElementById('card-container')
-            fetch('/content/pingpongloader')
-                .then(res => res.text())
-                .then(text => cardHolder.innerHTML = text)
+            messageContainer.textContent = data.message
         } else {
             const blob = await res.blob()
             const url = URL.createObjectURL(blob)
-            document.getElementById('card-container').innerHTML = '<iframe src="'+url+'" width="80%" height="600px"></iframe>'
+            messageContainer.textContent = ""
+            cardHolder.innerHTML = '<iframe src="'+url+'" width="80%" height="600px"></iframe>'
         }
     }
     getMesscard()

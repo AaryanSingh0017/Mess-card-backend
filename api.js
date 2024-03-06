@@ -11,15 +11,9 @@ const Helper = require('./helpers/helpers')
 const puppeteer = require('puppeteer')
 const multer = require('multer')
 const storage = multer.memoryStorage()
-// const storage = multer.diskStorage({
-//     destination: (req, file, callback) => {
-//         callback(null, 'images')
-//     },
-//     filename: (req, file, callback) => {
-//         callback(null, `${req.session.passport.user}.jpg`)
-//     }
-// });
 const upload = multer({ storage })
+const Dapp = require('./dapp-interact')
+const { createHash } = require('crypto')
 
 const checkAPIKey = (req, res, next) => {
     const apiKey = req.headers.authorization;
@@ -161,7 +155,7 @@ router.post('/student/form', Helper.checkStudentAuthenticated, async (req, res) 
             })
         }
 
-        const newStudent = await Student.create({
+        const data = {
             USN: req.session.passport.user,
             Name: req.body.Name,
             Department: req.body.Department,
@@ -174,8 +168,12 @@ router.post('/student/form', Helper.checkStudentAuthenticated, async (req, res) 
             CGPA: req.body.CGPA,
             RoomNo: req.body.RoomNo,
             HostelId: req.body.HostelId,
-        });
-
+        }
+        const newStudent = await Student.create(data);
+        const data_ = { USN: data.USN, Name: data.Name}
+        const hash = createHash('sha256').update(JSON.stringify(data_)).digest('hex')
+        const hashBuffer = Buffer.from(hash, 'hex')
+        await Dapp.addMessCard(req.session.passport.user, hashBuffer)
         res.status(201).send(newStudent);
     } catch (error) {
         console.error(error);

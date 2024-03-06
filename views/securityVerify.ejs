@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<!---Coding By CodingLab | www.codinglabweb.com--->
+<html lang="en">
+
+<head>
+  <title>Fee Details</title>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+  <link rel="stylesheet" href="/css/student_form.css" />
+</head>
+
+<body>
+  <section class="container">
+    <header> Mess Card Verification</header>
+    <div id="message-container" style="color: red; padding-top: 10px; justify-content: center;"></div>
+    <form class="form">
+      <div class="input-box">
+        <label>USN</label>
+        <input type="text" placeholder="Enter USN" id="usn" required />
+      </div>
+
+      <div class="input-box">
+        <label>Name</label>
+        <input type="text" placeholder="Enter Name" id="name" required />
+      </div>
+
+      <button type="button" onclick="submitForm()">Submit</button>
+    </form>
+  </section>
+</body>
+<script>
+    const USN = document.getElementById('usn');
+    const Name = document.getElementById('name');
+    const messageContainer = document.getElementById('message-container');
+    async function submitForm () {
+        const res = await fetch('/security/verify/', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({ USN: USN.value, Name: Name.value})
+        })
+        const data = await res.json()
+        if(! res.ok) {
+            messageContainer.textContent = data.message
+        } else {
+            messageContainer.innerHTML = '<div style="color: black"><p>Calculated Hash: '+data.calculated+'</p><p>Actual Hash: '+data.actual+'</p><p style="font-weight: bold;">Result: '+`${data.result? "The details are real": "The details are fake"}`+'</div>'
+        }
+    }
+
+  </script>
+
+</html>

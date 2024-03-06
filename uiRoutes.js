@@ -3,6 +3,7 @@ const Student = require('./models/Student')
 const Fee = require('./models/Fee')
 const router = express.Router()
 const Helper = require('./helpers/helpers')
+const Dapp = require('./dapp-interact')
 
 router.get('', (req, res) => {
     res.render('index')
@@ -76,7 +77,5 @@ router.get('/admin/dashboard', Helper.isAdminLoggedIn, async (req, res) => {
     const apiKey = process.env.API_KEY
     res.render('adminDashboard', { apiKey })
 })
-
-router.get('/content/pingpongloader', (req, res) => res.render('pingPongLoader'))
 
 module.exports = router
