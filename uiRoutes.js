@@ -4,6 +4,11 @@ const Fee = require('./models/Fee')
 const router = express.Router()
 const Helper = require('./helpers/helpers')
 
+router.get('/table', (req, res) => {
+    const apiKey = process.env.API_KEY
+    res.render('table', { apiKey })
+})
+
 router.get('', (req, res) => {
     res.render('index')
 })

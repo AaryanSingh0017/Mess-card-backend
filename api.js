@@ -90,8 +90,8 @@ router.post('/student/login', async (req, res) => {
 })
 
 router.post('/student/logout', Helper.checkStudentAuthenticated, (req, res) => {
-    if(req.session.passport.type !== 'student')
-        return res.status(403).json({ message: 'User is not student'})
+    if (req.session.passport.type !== 'student')
+        return res.status(403).json({ message: 'User is not student' })
     req.logout(err => {
         if (err) {
             return res.status(500).send({ message: 'Internal server error.' })
@@ -116,10 +116,10 @@ const checkFeeFormFilled = async (req, res, next) => {
     const fee = await Fee.findByPk(req.session.passport.user)
     if (!fee) {
         return res.status(401).json({ message: 'Fill fee detail form first.' })
-    } else if(fee.Status === 'Pending') {
-        return res.status(401).json({ message: 'Your Fee payment is yet to be verified. Please wait'})
-    } else if(fee.Status === 'Rejected') {
-        return res.status(401).json({ message: 'Your application is rejected. Please contact admin for further updates'})
+    } else if (fee.Status === 'Pending') {
+        return res.status(401).json({ message: 'Your Fee payment is yet to be verified. Please wait' })
+    } else if (fee.Status === 'Rejected') {
+        return res.status(401).json({ message: 'Your application is rejected. Please contact admin for further updates' })
     }
     next()
 }
@@ -132,7 +132,22 @@ const checkImageUploaded = async (req, res, next) => {
     next()
 }
 
-router.post('/student/form', Helper.checkStudentAuthenticated, async (req, res) => {
+
+const checkStudentFormAlreadyFilled = async (req, res, next) => {
+    const existing = await Student.findByPk(req.session.passport.user)
+    if (existing) {
+        return res.status(409).json({
+            message: 'You have already filled this form. Contact admin to edit'
+        })
+    }
+    next()
+}
+
+router.get('/student/is-form-filled', checkStudentFormAlreadyFilled, (req, res) => {
+    return res.status(200).json({ message: 'All ok'})
+})
+
+router.post('/student/form', Helper.checkStudentAuthenticated, checkStudentFormAlreadyFilled, async (req, res) => {
     try {
         const nullFields = [];
         for (const field of ['Name', 'Department', 'Semester', 'Address',
@@ -146,13 +161,6 @@ router.post('/student/form', Helper.checkStudentAuthenticated, async (req, res) 
             return res.status(400).json({
                 message: `Missing required fields: ${nullFields.join(', ')}`,
             });
-        }
-
-        const existing = await Student.findByPk(req.session.passport.user)
-        if(existing) {
-            return res.status(409).json({
-                message: 'You have already filled this form. Contact admin to edit'
-            })
         }
 
         const data = {
@@ -170,14 +178,14 @@ router.post('/student/form', Helper.checkStudentAuthenticated, async (req, res) 
             HostelId: req.body.HostelId,
         }
         const newStudent = await Student.create(data);
-        const data_ = { USN: data.USN, Name: data.Name}
+        const data_ = { USN: data.USN, Name: data.Name }
         const hash = createHash('sha256').update(JSON.stringify(data_)).digest('hex')
         const hashBuffer = Buffer.from(hash, 'hex')
         await Dapp.addMessCard(req.session.passport.user, hashBuffer)
         res.status(201).send(newStudent);
     } catch (error) {
         console.error(error);
-        res.status(500).send({message: 'Internal Server Error'});
+        res.status(500).send({ message: 'Internal Server Error' });
     }
 });
 
@@ -236,11 +244,11 @@ router.get('/student/get-messcard', Helper.checkStudentAuthenticated, checkStdFo
 const checkImageNotUploaded = async (req, res, next) => {
     try {
         const img = await Picture.findByPk(req.session.passport.user)
-        if(img)
-            return res.status(403).json({ message: "Image already uploaded. Contact admin to edit"})
+        if (img)
+            return res.status(403).json({ message: "Image already uploaded. Contact admin to edit" })
         next()
-    } catch(e) {
-        return res.status(500).json({ message: 'Internal server error'})
+    } catch (e) {
+        return res.status(500).json({ message: 'Internal server error' })
     }
 }
 

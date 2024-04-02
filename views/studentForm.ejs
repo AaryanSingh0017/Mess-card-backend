@@ -83,10 +83,26 @@
           <input id="bloodgrp" type="text" placeholder="Enter Your Blood Group" required />
         </div>
       </div>
-      <button onclick="submitForm()" type="button">Submit</button>
+      <button id="submit" onclick="submitForm()" type="button">Submit</button>
     </form>
 
     <script>
+      async function isFormFilled() {
+        const apiKey = '<%= apiKey %>'
+        const response = await fetch('/api/student/is-form-filled', {
+          method: 'GET',
+          headers: {
+            'Authorization': apiKey,
+          }
+        })
+        if (!response.ok) {
+          const data = await response.json()
+          const messageContainer = document.getElementById('message-container')
+          messageContainer.textContent = data.message
+          document.getElementById('submit').hidden = true;
+        }
+      }
+      isFormFilled()
       async function submitForm() {
         const apiKey = '<%= apiKey %>'
         const Name = document.getElementById('fullname').value;
